@@ -51,9 +51,9 @@
 #define token *buffer
 
 /* GLOBALS */
-static char *buffer = NULL;	/* read buffer */
-static int regnum = 1;		/* for next free virtual register number */
-static FILE *outfile = NULL;	/* output of code generation */
+static char *buffer = NULL;  /* read buffer */
+static int regnum = 1;		 /* for next free virtual register number */
+static FILE *outfile = NULL; /* output of code generation */
 
 /* Utilities */
 static void CodeGen(OpCode opcode, int field1, int field2, int field3);
@@ -62,7 +62,7 @@ static inline int next_register();
 static inline int is_digit(char c);
 static inline int to_digit(char c);
 static inline int is_identifier(char c);
-static char *read_input(FILE * f);
+static char *read_input(FILE *f);
 
 /* Routines for recursive descending parser LL(1) */
 static void program();
@@ -94,7 +94,8 @@ static int digit()
 	//DIGIT ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 	int reg;
 
-	if (!is_digit(token)) {
+	if (!is_digit(token))
+	{
 		ERROR("Expected digit\n");
 		exit(EXIT_FAILURE);
 	}
@@ -108,10 +109,11 @@ static int digit()
 static int var()
 {
 	/* YOUR CODE GOES HERE */
-	//VAR ::= a | b | c | d | e | f 
+	//VAR ::= a | b | c | d | e | f
 	int reg;
 
-	if(!is_identifier(token)) {
+	if (!is_identifier(token))
+	{
 		ERROR("Expected identfier\n");
 		exit(EXIT_FAILURE);
 	}
@@ -124,11 +126,12 @@ static int var()
 //Done
 static int expr()
 {
-	switch (token) {
+	switch (token)
+	{
 	case '+':
 	case '-':
 	case '*':
-    	return arith_expr();
+		return arith_expr();
 	case '&':
 	case '|':
 		return logical_expr();
@@ -160,17 +163,25 @@ static int arith_expr()
 {
 	int reg, left_reg, right_reg;
 	next_token();
-	left_reg = expr();
-	right_reg = expr();
-	reg = next_register();
-	switch (token) {
+
+	switch (token)
+	{
 	case '+':
+		left_reg = expr();
+		right_reg = expr();
+		reg = next_register();
 		CodeGen(ADD, reg, left_reg, right_reg);
 		return reg;
 	case '-':
+		left_reg = expr();
+		right_reg = expr();
+		reg = next_register();
 		CodeGen(SUB, reg, left_reg, right_reg);
 		return reg;
 	case '*':
+		left_reg = expr();
+		right_reg = expr();
+		reg = next_register();
 		CodeGen(MUL, reg, left_reg, right_reg);
 		return reg;
 	}
@@ -181,14 +192,18 @@ static int logical_expr()
 	/* YOUR CODE GOES HERE */
 	int reg, left_reg, right_reg;
 	next_token();
-	left_reg = expr();
-	right_reg = expr();
-	reg = next_register();
-	switch (token) {
+	switch (token)
+	{
 	case '&':
+		left_reg = expr();
+		right_reg = expr();
+		reg = next_register();
 		CodeGen(AND, reg, left_reg, right_reg);
 		return reg;
 	case '|':
+		left_reg = expr();
+		right_reg = expr();
+		reg = next_register();
 		CodeGen(OR, reg, left_reg, right_reg);
 		return reg;
 	}
@@ -236,7 +251,8 @@ static void CodeGen(OpCode opcode, int field1, int field2, int field3)
 {
 	Instruction instr;
 
-	if (!outfile) {
+	if (!outfile)
+	{
 		ERROR("File error\n");
 		exit(EXIT_FAILURE);
 	}
@@ -249,7 +265,8 @@ static void CodeGen(OpCode opcode, int field1, int field2, int field3)
 
 static inline void next_token()
 {
-	if (*buffer == '\0') {
+	if (*buffer == '\0')
+	{
 		ERROR("End of program input\n");
 		exit(EXIT_FAILURE);
 	}
@@ -257,7 +274,8 @@ static inline void next_token()
 	if (*buffer == ';')
 		printf("\n");
 	buffer++;
-	if (*buffer == '\0') {
+	if (*buffer == '\0')
+	{
 		ERROR("End of program input\n");
 		exit(EXIT_FAILURE);
 	}
@@ -292,23 +310,27 @@ static inline int is_identifier(char c)
 	return 0;
 }
 
-static char *read_input(FILE * f)
+static char *read_input(FILE *f)
 {
 	size_t size, i;
 	char *b;
 	int c;
 
-	for (b = NULL, size = 0, i = 0;;) {
-		if (i >= size) {
+	for (b = NULL, size = 0, i = 0;;)
+	{
+		if (i >= size)
+		{
 			size = (size == 0) ? MAX_BUFFER_SIZE : size * 2;
 			b = (char *)realloc(b, size * sizeof(char));
-			if (!b) {
+			if (!b)
+			{
 				ERROR("Realloc failed\n");
 				exit(EXIT_FAILURE);
 			}
 		}
 		c = fgetc(f);
-		if (EOF == c) {
+		if (EOF == c)
+		{
 			b[i] = '\0';
 			break;
 		}
@@ -333,17 +355,20 @@ int main(int argc, char *argv[])
 	printf("------------------------------------------------\n");
 	printf("CS314 compiler for tinyL\n");
 	printf("------------------------------------------------\n");
-	if (argc != 2) {
+	if (argc != 2)
+	{
 		ERROR("Use of command:\n  compile <tinyL file>\n");
 		exit(EXIT_FAILURE);
 	}
 	infile = fopen(argv[1], "r");
-	if (!infile) {
+	if (!infile)
+	{
 		ERROR("Cannot open input file \"%s\"\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
 	outfile = fopen(outfilename, "w");
-	if (!outfile) {
+	if (!outfile)
+	{
 		ERROR("Cannot open output file \"%s\"\n", outfilename);
 		exit(EXIT_FAILURE);
 	}
