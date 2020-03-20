@@ -100,7 +100,7 @@ static int digit()
 		exit(EXIT_FAILURE);
 	}
 	reg = next_register();
-	CodeGen(LOADI, reg, to_digit(token), EMPTY_FIELD);
+	CodeGen(LOADI, to_digit(token), reg, EMPTY_FIELD);
 	next_token();
 	return reg;
 }
@@ -118,7 +118,7 @@ static int var()
 		exit(EXIT_FAILURE);
 	}
 	reg = next_register();
-	CodeGen(LOAD, reg, token, EMPTY_FIELD);
+	CodeGen(LOAD, 0, token, reg);
 	next_token();
 	return reg;
 }
