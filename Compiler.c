@@ -247,25 +247,7 @@ static void assign()
 static void read()
 {
 	/* YOUR CODE GOES HERE */
-	/*
-	if (token == '%')
-	{
-		next_token();
-
-		if (!is_identifier(token))
-		{
-			ERROR("Expected identifier\n");
-			exit(EXIT_FAILURE);
-		}
-		CodeGen(READ, token, EMPTY_FIELD, EMPTY_FIELD);
-		next_token();
-	}
-	else
-	{
-		ERROR("Expected &\n");
-		exit(EXIT_FAILURE);
-	}
-	*/
+	//READ ::= % VAR
 	if (token != '%')
 	{
 		ERROR("Expected &\n");
@@ -288,21 +270,21 @@ static void read()
 static void print()
 {
 	/* YOUR CODE GOES HERE */
-	if (token == "$")
-	{
-		next_token();
-		//Check
-		if (is_identifier(token) == 1)
-		{
-			CodeGen(WRITE, token, EMPTY_FIELD, EMPTY_FIELD);
-			next_token();
-		}
-		else
-		{
-			ERROR("ERROR: Input symbol is %c \n", token);
-			exit(EXIT_FAILURE);
-		}
+	//PRINT ::= $ VAR
+	if (token != "$") {
+		ERROR("Expected $\n");
+		exit(EXIT_FAILURE);
 	}
+
+	next_token();
+
+	if(!is_identifier(token)) {
+		ERROR("Expected identifier\n");
+		exit(EXIT_FAILURE);
+	}
+	
+	CodeGen(WRITE, token, EMPTY_FIELD, EMPTY_FIELD);
+	next_token();
 }
 
 //Done
