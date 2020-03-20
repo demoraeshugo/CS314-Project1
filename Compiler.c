@@ -126,8 +126,6 @@ static int var()
 //Done
 static int expr()
 {
-	int reg, left_reg, right_reg;
-
 	switch (token)
 	{
 	case '+':
