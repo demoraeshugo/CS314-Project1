@@ -234,7 +234,7 @@ static void assign()
 
 	next_token();
 	result = expr();
-	CodeGen(STORE, id, result, EMPTY_FIELD)
+	CodeGen(STORE, id, result, EMPTY_FIELD);
 	
 }
 
