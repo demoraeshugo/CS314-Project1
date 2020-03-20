@@ -185,6 +185,9 @@ static int arith_expr()
 		reg = next_register();
 		CodeGen(MUL, reg, left_reg, right_reg);
 		return reg;
+	default:
+		ERROR("Symbol %c unknown\n", token);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -208,6 +211,9 @@ static int logical_expr()
 		reg = next_register();
 		CodeGen(OR, reg, left_reg, right_reg);
 		return reg;
+	default:
+		ERROR("Symbol %c unknown\n", token);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -260,14 +266,16 @@ static void read()
 		exit(EXIT_FAILURE);
 	}
 	*/
-	if(token != '%') {
+	if (token != '%')
+	{
 		ERROR("Expected &\n");
 		exit(EXIT_FAILURE);
 	}
 
 	next_token();
 
-	if(!is_identifier(token)) {
+	if (!is_identifier(token))
+	{
 		ERROR("Expected identifier\n");
 		exit(EXIT_FAILURE);
 	}
