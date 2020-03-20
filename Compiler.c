@@ -51,7 +51,7 @@
 #define token *buffer
 
 /* GLOBALS */
-static char *buffer = NULL;  /* read buffer */
+static char *buffer = NULL;	 /* read buffer */
 static int regnum = 1;		 /* for next free virtual register number */
 static FILE *outfile = NULL; /* output of code generation */
 
@@ -126,12 +126,31 @@ static int var()
 //Done
 static int expr()
 {
+	int reg, left_reg, right_reg;
+
 	switch (token)
 	{
 	case '+':
+		next_token();
+		left_reg = expr();
+		right_reg = expr();
+		reg = next_register();
+		CodeGen(ADD, reg, left_reg, right_reg);
+		return reg;
 	case '-':
+		next_token();
+		left_reg = expr();
+		right_reg = expr();
+		reg = next_register();
+		CodeGen(SUB, reg, left_reg, right_reg);
+		return reg;
 	case '*':
-		return arith_expr();
+		next_token();
+		left_reg = expr();
+		right_reg = expr();
+		reg = next_register();
+		CodeGen(MUL, reg, left_reg, right_reg);
+		return reg;
 	case '&':
 	case '|':
 		return logical_expr();
@@ -159,6 +178,7 @@ static int expr()
 	}
 }
 
+//Done
 static int arith_expr()
 {
 	int reg, left_reg, right_reg;
@@ -187,6 +207,7 @@ static int arith_expr()
 	}
 }
 
+//Done
 static int logical_expr()
 {
 	/* YOUR CODE GOES HERE */
@@ -209,39 +230,111 @@ static int logical_expr()
 	}
 }
 
+//Done
 static void assign()
 {
 	/* YOUR CODE GOES HERE */
+	char variable;
+	if (is_identifier(token))
+	{
+		variable = token;
+		printf("\n Variable: %c\n, variable");
+		next_token();
+		if (token == "=")
+		{
+			next_token();
+			int a = expr();
+			CodeGen(STORE, variable, a, EMPTY_FIELD);
+		}
+	}
+	else
+	{
+		ERROR("Assign error %c unkown \n", token);
+	}
 }
 
+//Done
 static void read()
 {
 	/* YOUR CODE GOES HERE */
+	if (token == "?")
+	{
+		next_token();
+		CodeGen(READ, token, EMPTY_FIELD, EMPTY_FIELD);
+	}
 }
 
+//Done
 static void print()
 {
 	/* YOUR CODE GOES HERE */
+	if (token == "!")
+	{
+		next_token();
+		//Check
+		if (is_identifier(token))
+		{
+			CodeGen(WRITE, token, EMPTY_FIELD, EMPTY_FIELD);
+			next_token();
+		}
+		else
+		{
+			ERROR("ERROR: Input symbol is %c \n", token);
+		}
+	}
 }
 
+//Done
 static void stmt()
 {
 	/* YOUR CODE GOES HERE */
+	switch (token)
+	{
+	case 'a':
+	case 'b':
+	case 'c':
+	case 'd':
+	case 'e':
+	case 'f':
+		assign();
+		break;
+	case '?':
+		read();
+		next_token();
+		break;
+	case '!':
+		print();
+		break;
+	}
 }
 
+//Done
 static void morestmts()
 {
 	/* YOUR CODE GOES HERE */
+	if(token == ";") {
+		next_token();
+		stmtlist();
+	}
 }
 
+//Done
 static void stmtlist()
 {
 	/* YOUR CODE GOES HERE */
+	stmt();
+	morestmts();
 }
 
+//Done
 static void program()
 {
 	/* YOUR CODE GOES HERE */
+	stmtlist();
+	if(token != ".") {
+		ERROR("Program error: Current input symbol is %c \n", token);
+		exit(EXIT_FAILURE);
+	}
 }
 
 /*************************************************************************/
