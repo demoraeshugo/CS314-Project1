@@ -118,7 +118,7 @@ static int var()
 		exit(EXIT_FAILURE);
 	}
 	reg = next_register();
-	CodeGen(LOAD, 0, token, reg);
+	CodeGen(LOAD, 0, (token-'a')*4, reg);
 	next_token();
 	return reg;
 }
@@ -163,23 +163,25 @@ static int expr()
 static int arith_expr()
 {
 	int reg, left_reg, right_reg;
-	next_token();
 
 	switch (token)
 	{
 	case '+':
+		next_token();
 		left_reg = expr();
 		right_reg = expr();
 		reg = next_register();
 		CodeGen(ADD, left_reg, right_reg, reg);
 		return reg;
 	case '-':
+		next_token();
 		left_reg = expr();
 		right_reg = expr();
 		reg = next_register();
 		CodeGen(SUB, left_reg, right_reg, reg);
 		return reg;
 	case '*':
+		next_token();
 		left_reg = expr();
 		right_reg = expr();
 		reg = next_register();
