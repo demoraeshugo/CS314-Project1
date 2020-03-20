@@ -323,13 +323,13 @@ static void morestmts()
 {
 	/* YOUR CODE GOES HERE */
 	//MORESTMTS ::= ; STMTLIST | epsilon
-	if (token == "!")
+	if (token == '!')
 	{
 		return;
 	}
 	else
 	{
-		if (token != ";")
+		if (token != ';')
 		{
 			ERROR("Program error.  Current input symbol is %c\n", token);
 			ERROR("Expected ;\n");
@@ -337,7 +337,6 @@ static void morestmts()
 		}
 		else
 		{
-
 			next_token();
 			stmtlist();
 		}
