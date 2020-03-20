@@ -131,26 +131,9 @@ static int expr()
 	switch (token)
 	{
 	case '+':
-		next_token();
-		left_reg = expr();
-		right_reg = expr();
-		reg = next_register();
-		CodeGen(ADD, reg, left_reg, right_reg);
-		return reg;
 	case '-':
-		next_token();
-		left_reg = expr();
-		right_reg = expr();
-		reg = next_register();
-		CodeGen(SUB, reg, left_reg, right_reg);
-		return reg;
 	case '*':
-		next_token();
-		left_reg = expr();
-		right_reg = expr();
-		reg = next_register();
-		CodeGen(MUL, reg, left_reg, right_reg);
-		return reg;
+		return arith_expr();
 	case '&':
 	case '|':
 		return logical_expr();
