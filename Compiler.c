@@ -205,13 +205,13 @@ static int logical_expr()
 		left_reg = expr();
 		right_reg = expr();
 		reg = next_register();
-		CodeGen(AND, reg, left_reg, right_reg);
+		CodeGen(AND, left_reg, right_reg, reg);
 		return reg;
 	case '|':
 		left_reg = expr();
 		right_reg = expr();
 		reg = next_register();
-		CodeGen(OR, reg, left_reg, right_reg);
+		CodeGen(OR, left_reg, right_reg, reg);
 		return reg;
 	default:
 		ERROR("Symbol %c unknown\n", token);
