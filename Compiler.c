@@ -324,14 +324,24 @@ static void morestmts()
 	/* YOUR CODE GOES HERE */
 	//MORESTMTS ::= ; STMTLIST | epsilon
 	if (token == "!")
-		return;
-	if (token != ";")
 	{
-		ERROR("Expected ;\n");
-		exit(EXIT_FAILURE);
+		return;
 	}
-	next_token();
-	stmtlist();
+	else
+	{
+		if (token != ";")
+		{
+			ERROR("Program error.  Current input symbol is %c\n", token);
+			ERROR("Expected ;\n");
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+
+			next_token();
+			stmtlist();
+		}
+	}
 }
 
 //Done
