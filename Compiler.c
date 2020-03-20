@@ -257,7 +257,7 @@ static void assign()
 static void read()
 {
 	/* YOUR CODE GOES HERE */
-	if (token == "?")
+	if (token == "%")
 	{
 		next_token();
 		CodeGen(READ, token, EMPTY_FIELD, EMPTY_FIELD);
@@ -268,7 +268,7 @@ static void read()
 static void print()
 {
 	/* YOUR CODE GOES HERE */
-	if (token == "!")
+	if (token == "$")
 	{
 		next_token();
 		//Check
@@ -280,6 +280,7 @@ static void print()
 		else
 		{
 			ERROR("ERROR: Input symbol is %c \n", token);
+			exit(EXIT_FAILURE);
 		}
 	}
 }
@@ -298,11 +299,11 @@ static void stmt()
 	case 'f':
 		assign();
 		break;
-	case '?':
+	case '%':
 		read();
 		next_token();
 		break;
-	case '!':
+	case '$':
 		print();
 		break;
 	}
@@ -315,6 +316,11 @@ static void morestmts()
 	if(token == ";") {
 		next_token();
 		stmtlist();
+	} else if(token == "!") {
+		return;
+	} else {
+		EROR("Symbol %c unknown \n", token);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -331,7 +337,7 @@ static void program()
 {
 	/* YOUR CODE GOES HERE */
 	stmtlist();
-	if(token != ".") {
+	if(token != "!") {
 		ERROR("Program error: Current input symbol is %c \n", token);
 		exit(EXIT_FAILURE);
 	}
