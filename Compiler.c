@@ -219,7 +219,8 @@ static void assign()
 	/* YOUR CODE GOES HERE */
 	char id;
 	int result;
-	if (!is_identifier(token)) {
+	if (!is_identifier(token))
+	{
 		ERROR("Expected indentifier \n");
 		exit(EXIT_FAILURE);
 	}
@@ -227,7 +228,8 @@ static void assign()
 	id = token;
 	next_token();
 
-	if(token != "-") {
+	if (token != "=")
+	{
 		ERROR("Expected =\n");
 		exit(EXIT_FAILURE);
 	}
@@ -235,7 +237,6 @@ static void assign()
 	next_token();
 	result = expr();
 	CodeGen(STORE, id, result, EMPTY_FIELD);
-	
 }
 
 //Done
@@ -291,6 +292,9 @@ static void stmt()
 	case '$':
 		print();
 		break;
+	default:
+		ERROR("Symbol %c unknown\n", token);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -298,12 +302,17 @@ static void stmt()
 static void morestmts()
 {
 	/* YOUR CODE GOES HERE */
-	if(token == ";") {
+	if (token == ";")
+	{
 		next_token();
 		stmtlist();
-	} else if(token == "!") {
+	}
+	else if (token == "!")
+	{
 		return;
-	} else {
+	}
+	else
+	{
 		ERROR("Symbol %c unknown \n", token);
 		exit(EXIT_FAILURE);
 	}
@@ -322,7 +331,8 @@ static void program()
 {
 	/* YOUR CODE GOES HERE */
 	stmtlist();
-	if(token != "!") {
+	if (token != "!")
+	{
 		ERROR("Program error: Current input symbol is %c \n", token);
 		exit(EXIT_FAILURE);
 	}
