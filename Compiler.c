@@ -221,26 +221,28 @@ static int logical_expr()
 static void assign()
 {
 	/* YOUR CODE GOES HERE */
-	char id;
-	int result;
-	if (!is_identifier(token))
+	// ASSIGN ::= VAR = EXPR
+	if (!(is_identifier(token)))
 	{
 		ERROR("Expected indentifier \n");
 		exit(EXIT_FAILURE);
 	}
 
-	id = token;
+	char id = token;
+	int result;
+	int offset = (id - 'a') * 4;
 	next_token();
 
-	if (token != "=")
+	if (token != '=')
 	{
 		ERROR("Expected =\n");
+		ERROR("Program error.  Current input symbol is %c\n", token);
 		exit(EXIT_FAILURE);
 	}
 
 	next_token();
 	result = expr();
-	CodeGen(STORE, id, result, EMPTY_FIELD);
+	CodeGen(STORE, result, 0, offset);
 }
 
 //Done
@@ -271,14 +273,16 @@ static void print()
 {
 	/* YOUR CODE GOES HERE */
 	//PRINT ::= $ VAR
-	if (token != "$") {
+	if (token != "$")
+	{
 		ERROR("Expected $\n");
 		exit(EXIT_FAILURE);
 	}
 
 	next_token();
 
-	if(!is_identifier(token)) {
+	if (!is_identifier(token))
+	{
 		ERROR("Expected identifier\n");
 		exit(EXIT_FAILURE);
 	}
@@ -319,8 +323,10 @@ static void morestmts()
 {
 	/* YOUR CODE GOES HERE */
 	//MORESTMTS ::= ; STMTLIST | epsilon
-	if(token == "!") return;
-	if(token != ";") {
+	if (token == "!")
+		return;
+	if (token != ";")
+	{
 		ERROR("Expected ;\n");
 		exit(EXIT_FAILURE);
 	}
