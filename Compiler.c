@@ -246,7 +246,19 @@ static void read()
 	if (token == "%")
 	{
 		next_token();
+
+		if (!is_identifier(token))
+		{
+			ERROR("Expected identifier\n");
+			exit(EXIT_FAILURE);
+		}
 		CodeGen(READ, token, EMPTY_FIELD, EMPTY_FIELD);
+		next_token();
+	}
+	else
+	{
+		ERROR("Expected &\n");
+		exit(EXIT_FAILURE);
 	}
 }
 
