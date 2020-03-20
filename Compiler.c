@@ -171,19 +171,19 @@ static int arith_expr()
 		left_reg = expr();
 		right_reg = expr();
 		reg = next_register();
-		CodeGen(ADD, reg, left_reg, right_reg);
+		CodeGen(ADD, left_reg, right_reg, reg);
 		return reg;
 	case '-':
 		left_reg = expr();
 		right_reg = expr();
 		reg = next_register();
-		CodeGen(SUB, reg, left_reg, right_reg);
+		CodeGen(SUB, left_reg, right_reg, reg);
 		return reg;
 	case '*':
 		left_reg = expr();
 		right_reg = expr();
 		reg = next_register();
-		CodeGen(MUL, reg, left_reg, right_reg);
+		CodeGen(MUL, left_reg, right_reg, reg);
 		return reg;
 	default:
 		ERROR("Symbol %c unknown\n", token);
