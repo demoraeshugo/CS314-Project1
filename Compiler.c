@@ -319,7 +319,7 @@ static void morestmts()
 	} else if(token == "!") {
 		return;
 	} else {
-		EROR("Symbol %c unknown \n", token);
+		ERROR("Symbol %c unknown \n", token);
 		exit(EXIT_FAILURE);
 	}
 }
