@@ -217,23 +217,25 @@ static int logical_expr()
 static void assign()
 {
 	/* YOUR CODE GOES HERE */
-	char variable;
-	if (is_identifier(token))
-	{
-		variable = token;
-		printf("\n Variable: %c\n, variable");
-		next_token();
-		if (token == "=")
-		{
-			next_token();
-			int a = expr();
-			CodeGen(STORE, variable, a, EMPTY_FIELD);
-		}
+	char id;
+	int result;
+	if (!is_identifier(token)) {
+		ERROR("Expected indentifier \n");
+		exit(EXIT_FAILURE);
 	}
-	else
-	{
-		ERROR("Assign error %c unkown \n", token);
+
+	id = token;
+	next_token();
+
+	if(token != "-") {
+		ERROR("Expected =\n");
+		exit(EXIT_FAILURE);
 	}
+
+	next_token();
+	result = expr();
+	CodeGen(STORE, id, result, EMPTY_FIELD)
+	
 }
 
 //Done
