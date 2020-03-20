@@ -243,6 +243,7 @@ static void assign()
 static void read()
 {
 	/* YOUR CODE GOES HERE */
+	/*
 	if (token == '%')
 	{
 		next_token();
@@ -260,6 +261,21 @@ static void read()
 		ERROR("Expected &\n");
 		exit(EXIT_FAILURE);
 	}
+	*/
+	if(token != '%') {
+		ERROR("Expected &\n");
+		exit(EXIT_FAILURE);
+	}
+
+	next_token();
+
+	if(!is_identifier(token)) {
+		ERROR("Expected identifier\n");
+		exit(EXIT_FAILURE);
+	}
+
+	CodeGen(READ, token, EMPTY_FIELD, EMPTY_FIELD);
+	next_token();
 }
 
 //Done
@@ -270,7 +286,7 @@ static void print()
 	{
 		next_token();
 		//Check
-		if (is_identifier(token))
+		if (is_identifier(token) == 1)
 		{
 			CodeGen(WRITE, token, EMPTY_FIELD, EMPTY_FIELD);
 			next_token();
