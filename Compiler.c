@@ -273,7 +273,7 @@ static void print()
 {
 	/* YOUR CODE GOES HERE */
 	//PRINT ::= $ VAR
-	if (token != "$")
+	if (token != '$')
 	{
 		ERROR("Expected $\n");
 		exit(EXIT_FAILURE);
@@ -358,7 +358,7 @@ static void program()
 	/* YOUR CODE GOES HERE */
 	//PROGRAM ::= STMTLIST !
 	stmtlist();
-	if (token != "!")
+	if (token != '!')
 	{
 		ERROR("Program error: Current input symbol is %c \n", token);
 		exit(EXIT_FAILURE);
