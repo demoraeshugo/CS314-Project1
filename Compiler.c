@@ -282,7 +282,7 @@ static void print()
 		ERROR("Expected identifier\n");
 		exit(EXIT_FAILURE);
 	}
-	
+
 	CodeGen(WRITE, token, EMPTY_FIELD, EMPTY_FIELD);
 	next_token();
 }
@@ -300,14 +300,13 @@ static void stmt()
 	case 'e':
 	case 'f':
 		assign();
-		break;
+		return;
 	case '%':
 		read();
-		next_token();
-		break;
+		return;
 	case '$':
 		print();
-		break;
+		return;
 	default:
 		ERROR("Symbol %c unknown\n", token);
 		exit(EXIT_FAILURE);
