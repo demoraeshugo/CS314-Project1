@@ -243,7 +243,7 @@ static void assign()
 static void read()
 {
 	/* YOUR CODE GOES HERE */
-	if (token == "%")
+	if (token == '%')
 	{
 		next_token();
 
