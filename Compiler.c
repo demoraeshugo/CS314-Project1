@@ -336,20 +336,14 @@ static void stmt()
 static void morestmts()
 {
 	/* YOUR CODE GOES HERE */
-	if (token == ";")
-	{
-		next_token();
-		stmtlist();
-	}
-	else if (token == "!")
-	{
-		return;
-	}
-	else
-	{
-		ERROR("Symbol %c unknown \n", token);
+	//MORESTMTS ::= ; STMTLIST | epsilon
+	if(token == "!") return;
+	if(token != ";") {
+		ERROR("Expected ;\n");
 		exit(EXIT_FAILURE);
 	}
+	next_token();
+	stmtlist();
 }
 
 //Done
