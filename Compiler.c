@@ -291,6 +291,7 @@ static void print()
 static void stmt()
 {
 	/* YOUR CODE GOES HERE */
+	//STMT ::= ASSIGN | READ | PRINT
 	switch (token)
 	{
 	case 'a':
@@ -331,6 +332,7 @@ static void morestmts()
 static void stmtlist()
 {
 	/* YOUR CODE GOES HERE */
+	//STMTLIST ::= STMT MORESTMTS
 	stmt();
 	morestmts();
 }
@@ -339,6 +341,7 @@ static void stmtlist()
 static void program()
 {
 	/* YOUR CODE GOES HERE */
+	//PROGRAM ::= STMTLIST !
 	stmtlist();
 	if (token != "!")
 	{
