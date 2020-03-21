@@ -18,10 +18,6 @@
 int main()
 {
 	Instruction *head;
-	bool con1;
-	bool con2;
-	bool con3;
-	bool con4;
 
 	head = ReadInstructionList(stdin);
 	if (!head) {
@@ -35,17 +31,22 @@ int main()
 
 	Instruction *instr = head;
 
+	bool con1;
+	bool con2;
+	bool con3;
+	bool con4;
+
 	do {
 		first = instr;
 		second = instr->next;
 		third = second->next;
 		if (first->opcode == LOADI && second->opcode == LOADI) {
+			con1 = first->field1 == third->field2;
+			con2 = second->field1 == third->field3;
+			con3 = first->field1 == third->field3;
+			con4 = second->field1 == third->field2;
 			switch (third->opcode) {
 				case ADD:
-					con1 = first->field1 == third->field2;
-					con2 = second->field1 == third->field3;
-					con3 = first->field1 == third->field3;
-					con4 = second->field1 == third->field2;
 					if (( con1 && con2) || ( con3 && con4 )) {
 						instr->field1 = third->field1;
 						instr->field2 = first->field2 + second->field2;
@@ -57,7 +58,7 @@ int main()
 					}		
 					break;
 				case MUL:
-					if ((first->field1 == third->field2 && second->field1 == third->field3) || (first->field1 == third->field3 && second->field1 == third->field2)) {
+					if (( con1 && con2) || ( con3 && con4 )) {
 						instr->field1 = third->field1;
 						instr->field2 = first->field2 * second->field2;
 						instr->next = third->next;
@@ -68,7 +69,7 @@ int main()
 					}		
 					break;		
 				case SUB:
-					if (first->field1 == third->field2 && second->field1 == third->field3) {
+					if ( con1 && con2 ) {
 						instr->field1 = third->field1;
 						instr->field2 = first->field2 - second->field2;
 						instr->next = third->next;
