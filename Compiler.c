@@ -231,7 +231,6 @@ static void assign()
 		exit(EXIT_FAILURE);
 	}
 
-	char id = token;
 	int result;
 	next_token();
 
