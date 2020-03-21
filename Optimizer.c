@@ -54,7 +54,7 @@ int main()
 						third->next->prev = instr;
 						free(second);
 						free(third);
-						// printf("Found ADD optimization.\n");
+						printf("Found ADD optimization.\n");
 					}		
 					break;
 				case MUL:
@@ -65,7 +65,7 @@ int main()
 						third->next->prev = instr;
 						free(second);
 						free(third);
-						// printf("Found MUL optimization.\n");
+						printf("Found MUL optimization.\n");
 					}		
 					break;		
 				case SUB:
@@ -76,11 +76,11 @@ int main()
 						third->next->prev = instr;
 						free(second);
 						free(third);
-						// printf("Found SUB optimization.\n");
+						printf("Found SUB optimization.\n");
 					}
 					break;
 				default:
-					// printf("\nNot optimizable.\n");
+					printf("\nNot optimizable.\n");
 					break;
 			}
 		}
