@@ -78,11 +78,9 @@ int main()
 		instr = instr->next;
 	} while (instr != NULL && instr->next != NULL && instr->next->next != NULL);
 
-	if (head) {
-		PrintInstructionList(stdout, head);
-		DestroyInstructionList(head);
-	}
-	return EXIT_SUCCESS;
+	PrintInstructionList(stdout, head);
+ 	DestroyInstructionList(head);
+ 	return EXIT_SUCCESS;
 }
 
 
