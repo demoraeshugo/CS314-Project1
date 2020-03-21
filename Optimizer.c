@@ -14,7 +14,6 @@
 #include "Utils.h"
 #include <stdbool.h>
 
-
 int main()
 {
 	Instruction *head;
@@ -87,8 +86,10 @@ int main()
 		instr = instr->next;
 	} while (instr != NULL && instr->next != NULL && instr->next->next != NULL);
 
-	PrintInstructionList(stdout, head);
- 	DestroyInstructionList(head);
+	if (head) {
+		PrintInstructionList(stdout, head);
+		DestroyInstructionList(head);
+	}
  	return EXIT_SUCCESS;
 }
 
