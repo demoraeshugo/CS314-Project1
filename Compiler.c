@@ -118,7 +118,7 @@ static int var()
 		exit(EXIT_FAILURE);
 	}
 	reg = next_register();
-	CodeGen(LOAD, 0, (token-'a')*4, reg);
+	CodeGen(LOAD, 0, token, reg);
 	next_token();
 	return reg;
 }
@@ -233,7 +233,6 @@ static void assign()
 
 	char id = token;
 	int result;
-	int offset = (id - 'a') * 4;
 	next_token();
 
 	if (token != '=')
@@ -245,7 +244,7 @@ static void assign()
 
 	next_token();
 	result = expr();
-	CodeGen(STORE, result, 0, offset);
+	CodeGen(STORE, result, 0, EMPTY_FIELD);
 }
 
 //Done
