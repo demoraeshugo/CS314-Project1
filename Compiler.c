@@ -163,27 +163,35 @@ static int expr()
 //Done
 static int arith_expr()
 {
-	int reg, left_reg, right_reg, opCode;
+	int reg, left_reg, right_reg;
 
 	switch (token)
 	{
 	case '+':
-		opCode = ADD;
+		next_token();
+		left_reg = expr();
+		right_reg = expr();
+		reg = next_register();
+		CodeGen(ADD, left_reg, right_reg, reg);
+		return reg;
 	case '-':
-		opCode = SUB;
+		next_token();
+		left_reg = expr();
+		right_reg = expr();
+		reg = next_register();
+		CodeGen(SUB, left_reg, right_reg, reg);
+		return reg;
 	case '*':
-		opCode = MUL;
+		next_token();
+		left_reg = expr();
+		right_reg = expr();
+		reg = next_register();
+		CodeGen(MUL, left_reg, right_reg, reg);
+		return reg;
 	default:
 		ERROR("Symbol %c unknown\n", token);
 		exit(EXIT_FAILURE);
 	}
-	
-	next_token();
-	left_reg = expr();
-	right_reg = expr();
-	reg = next_register();
-	CodeGen(opCode, left_reg, right_reg, reg);
-	return reg;
 }
 
 //Done
