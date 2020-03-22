@@ -165,27 +165,20 @@ static int arith_expr()
 {
 	int reg, left_reg, right_reg;
 
+	next_token();
+	left_reg = expr();
+	right_reg = expr();
+	reg = next_register();
+
 	switch (token)
 	{
 	case '+':
-		next_token();
-		left_reg = expr();
-		right_reg = expr();
-		reg = next_register();
 		CodeGen(ADD, left_reg, right_reg, reg);
 		return reg;
 	case '-':
-		next_token();
-		left_reg = expr();
-		right_reg = expr();
-		reg = next_register();
 		CodeGen(SUB, left_reg, right_reg, reg);
 		return reg;
 	case '*':
-		next_token();
-		left_reg = expr();
-		right_reg = expr();
-		reg = next_register();
 		CodeGen(MUL, left_reg, right_reg, reg);
 		return reg;
 	default:
@@ -199,20 +192,18 @@ static int logical_expr()
 {
 	/* YOUR CODE GOES HERE */
 	int reg, left_reg, right_reg;
+
+	next_token();
+	left_reg = expr();
+	right_reg = expr();
+	reg = next_register();
+
 	switch (token)
 	{
 	case '&':
-		next_token();
-		left_reg = expr();
-		right_reg = expr();
-		reg = next_register();
 		CodeGen(AND, left_reg, right_reg, reg);
 		return reg;
 	case '|':
-		next_token();
-		left_reg = expr();
-		right_reg = expr();
-		reg = next_register();
 		CodeGen(OR, left_reg, right_reg, reg);
 		return reg;
 	default:
