@@ -163,23 +163,23 @@ static int expr()
 //Done
 static int arith_expr()
 {
-	int reg, left_reg, right_reg;
+	int reg, leftReg, rightReg;
 
 	next_token();
-	left_reg = expr();
-	right_reg = expr();
+	leftReg = expr();
+	rightReg = expr();
 	reg = next_register();
 
 	switch (token)
 	{
 	case '+':
-		CodeGen(ADD, left_reg, right_reg, reg);
+		CodeGen(ADD, leftReg, rightReg, reg);
 		return reg;
 	case '-':
-		CodeGen(SUB, left_reg, right_reg, reg);
+		CodeGen(SUB, leftReg, rightReg, reg);
 		return reg;
 	case '*':
-		CodeGen(MUL, left_reg, right_reg, reg);
+		CodeGen(MUL, leftReg, rightReg, reg);
 		return reg;
 	default:
 		ERROR("Symbol %c unknown\n", token);
@@ -191,20 +191,20 @@ static int arith_expr()
 static int logical_expr()
 {
 	/* YOUR CODE GOES HERE */
-	int reg, left_reg, right_reg;
+	int reg, leftReg, rightReg;
 
 	next_token();
-	left_reg = expr();
-	right_reg = expr();
+	leftReg = expr();
+	rightReg = expr();
 	reg = next_register();
 
 	switch (token)
 	{
 	case '&':
-		CodeGen(AND, left_reg, right_reg, reg);
+		CodeGen(AND, leftReg, rightReg, reg);
 		return reg;
 	case '|':
-		CodeGen(OR, left_reg, right_reg, reg);
+		CodeGen(OR, leftReg, rightReg, reg);
 		return reg;
 	default:
 		ERROR("Symbol %c unknown\n", token);
