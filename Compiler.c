@@ -119,7 +119,7 @@ static int var()
 		exit(EXIT_FAILURE);
 	}
 	reg = next_register();
-	CodeGen(LOAD, 0, token, reg);
+	CodeGen(LOAD, reg, token, EMPTY_FIELD);
 	next_token();
 	return reg;
 }
