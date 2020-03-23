@@ -213,25 +213,16 @@ static void assign()
 {
 	/* YOUR CODE GOES HERE */
 	// ASSIGN ::= VAR = EXPR
-	if (!(is_identifier(token)))
-	{
-		ERROR("Expected indentifier \n");
-		exit(EXIT_FAILURE);
-	}
 
-	int reg;
-	next_token();
+	char var = token;
 
-	if (token != '=')
-	{
-		ERROR("Expected =\n");
-		ERROR("Program error.  Current input symbol is %c\n", token);
-		exit(EXIT_FAILURE);
-	}
+    next_token();
 
-	next_token();
-	reg = expr();
-	CodeGen(STORE, reg, 0, token);
+    if(token == '=') {
+        next_token();
+        int reg = expr();
+        CodeGen(STORE, reg, 0, (var-'a')*4);
+    }
 }
 
 //Done
