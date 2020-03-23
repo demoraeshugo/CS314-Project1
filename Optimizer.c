@@ -146,10 +146,11 @@ void findCriticals(Instruction *backward)
 		case READ:
 		case WRITE:
 			break;
-			
+
 			backward = backward->prev;
 		}
 	}
+}
 
 	/*
  * Push critical register into list
