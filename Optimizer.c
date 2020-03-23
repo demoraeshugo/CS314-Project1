@@ -218,17 +218,46 @@ int main()
 		first = instr;
 		second = instr->next;
 		third = second->next;
-		con1 = false;
-	 	con2 = false;
-	 	con3 = false;
+		con3 = false;
 		con4 = false;
+		if (first->field1 == third->field2)
+		{
+			con1 = true;
+		}
+		else
+		{
+			con1 = false;
+		}
+
+		if (second->field1 == third->field3)
+		{
+			con2 = true;
+		}
+		else
+		{
+			con2 = false;
+		}
 		
+		if (first->field1 == third->field3)
+		{
+			con3 = true;
+		}
+		else
+		{
+			con3 = false;
+		}
+
+		if (second->field1 == third->field2)
+		{
+			con4 = true;
+		}
+		else
+		{
+			con4 = false;
+		}
+
 		if (first->opcode == LOADI && second->opcode == LOADI)
 		{
-			if(first->field1 == third->field2) con1 = true;
-			if(second->field1 == third->field3) con2 = true;
-			if(first->field1 == third->field3) con3 = true;
-			if(second->field1 == third->field2) con4 = true;
 
 			switch (third->opcode)
 			{
@@ -276,10 +305,7 @@ int main()
 		instr = instr->next;
 	} while (instr != NULL && instr->next != NULL && instr->next->next != NULL);
 
-	if (head)
-	{
-		PrintInstructionList(stdout, head);
-		DestroyInstructionList(head);
-	}
+	PrintInstructionList(stdout, head);
+	DestroyInstructionList(head);
 	return EXIT_SUCCESS;
 }
