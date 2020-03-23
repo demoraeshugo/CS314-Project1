@@ -177,33 +177,14 @@ int loadRegisters(OpCode opcode) {
 //Done
 static int arith_expr()
 {
-	int reg, leftReg, rightReg;
-
 	switch (token)
 	{
 	case '+':
-	/*
-		next_token();
-		leftReg = expr();
-		rightReg = expr();
-		reg = next_register();
-		CodeGen(ADD, leftReg, rightReg, reg);
-		*/
 		return loadRegisters(ADD);
 	case '-':
-		next_token();
-		leftReg = expr();
-		rightReg = expr();
-		reg = next_register();
-		CodeGen(SUB, leftReg, rightReg, reg);
-		return reg;
+		return loadRegisters(SUB);
 	case '*':
-		next_token();
-		leftReg = expr();
-		rightReg = expr();
-		reg = next_register();
-		CodeGen(MUL, leftReg, rightReg, reg);
-		return reg;
+		return loadRegisters(MUL);
 	default:
 		ERROR("Symbol %c unknown\n", token);
 		exit(EXIT_FAILURE);
