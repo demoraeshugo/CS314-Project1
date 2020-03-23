@@ -101,7 +101,7 @@ static int digit()
 		exit(EXIT_FAILURE);
 	}
 	reg = next_register();
-	CodeGen(LOADI, to_digit(token), reg, EMPTY_FIELD);
+	CodeGen(LOADI, reg, to_digit(token), EMPTY_FIELD);
 	next_token();
 	return reg;
 }
