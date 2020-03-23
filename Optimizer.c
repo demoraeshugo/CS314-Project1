@@ -122,8 +122,11 @@ void findCriticals(Instruction *backward)
 		{
 		case LOADI:
 			if (isCritical(backward->field2, 0))
+			{
 				backward->critical = 1;
+			}
 			break;
+
 		case ADD:
 		case SUB:
 		case MUL:
@@ -135,120 +138,127 @@ void findCriticals(Instruction *backward)
 				push(backward->field2, 0);
 			}
 			break;
+
+		case LOAD:
+		case STORE:
+		case OR:
+		case AND:
+		case READ:
+		case WRITE:
+			break;
+			
+			backward = backward->prev;
 		}
-
-		backward = backward->prev;
 	}
-}
 
-/*
+	/*
  * Push critical register into list
  */
-void push(int reg, int c)
-{
-
-	if (!critHead)
-	{
-		critHead = malloc(sizeof(node_t));
-
-		critHead->reg = reg;
-		critHead->c = c;
-
-		return;
-	}
-
-	node_t *current = critHead;
-
-	while (current->next != NULL)
-	{
-		if (current->next->reg == reg && current->next->c == c)
-			return;
-		current = current->next;
-	}
-
-	current->next = malloc(sizeof(node_t));
-	current->next->reg = reg;
-	current->next->c = c;
-	current->next->next = NULL;
-}
-
-/*
- * Remove critical register from list
- */
-void pop(int reg, int c)
-{
-
-	node_t *current = critHead;
-	node_t *tempNode = critHead;
-
-	while (current)
+	void push(int reg, int c)
 	{
 
-		if (current->reg == reg && current->c == c)
+		if (!critHead)
 		{
+			critHead = malloc(sizeof(node_t));
 
-			//head
-			if (current == critHead)
-			{
+			critHead->reg = reg;
+			critHead->c = c;
 
-				critHead = critHead->next;
-				free(current);
-				return;
-			}
-
-			//tail
-			else if (current->next == NULL)
-			{
-				tempNode->next = NULL;
-				free(current);
-				return;
-			}
-
-			//middle
-			else
-			{
-				tempNode->next = current->next;
-				free(current);
-				return;
-			}
+			return;
 		}
 
-		tempNode = current;
-		current = current->next;
-	}
-}
+		node_t *current = critHead;
 
-/*
+		while (current->next != NULL)
+		{
+			if (current->next->reg == reg && current->next->c == c)
+				return;
+			current = current->next;
+		}
+
+		current->next = malloc(sizeof(node_t));
+		current->next->reg = reg;
+		current->next->c = c;
+		current->next->next = NULL;
+	}
+
+	/*
+ * Remove critical register from list
+ */
+	void pop(int reg, int c)
+	{
+
+		node_t *current = critHead;
+		node_t *tempNode = critHead;
+
+		while (current)
+		{
+
+			if (current->reg == reg && current->c == c)
+			{
+
+				//head
+				if (current == critHead)
+				{
+
+					critHead = critHead->next;
+					free(current);
+					return;
+				}
+
+				//tail
+				else if (current->next == NULL)
+				{
+					tempNode->next = NULL;
+					free(current);
+					return;
+				}
+
+				//middle
+				else
+				{
+					tempNode->next = current->next;
+					free(current);
+					return;
+				}
+			}
+
+			tempNode = current;
+			current = current->next;
+		}
+	}
+
+	/*
  * Searches through list of critical registers and returns if register
  * in parameter appears
  */
-int isCritical(int reg, int c)
-{
-	node_t *current = critHead;
-
-	while (current)
+	int isCritical(int reg, int c)
 	{
-		if (current->reg == reg && current->c == c)
-			return 1;
+		node_t *current = critHead;
 
-		current = current->next;
+		while (current)
+		{
+			if (current->reg == reg && current->c == c)
+				return 1;
+
+			current = current->next;
+		}
+
+		return 0;
 	}
 
-	return 0;
-}
-
-/*
+	/*
  * Prints list of critical registers
  */
-void print_list()
-{
-	node_t *current = critHead;
-
-	while (current)
+	void print_list()
 	{
-		fprintf(stdout, "(%d, %d)  ", current->reg, current->c);
-		current = current->next;
-	}
+		node_t *current = critHead;
 
-	fprintf(stdout, "\n");
-}
+		while (current)
+		{
+			fprintf(stdout, "(%d, %d)  ", current->reg, current->c);
+			current = current->next;
+		}
+
+		fprintf(stdout, "\n");
+	}
