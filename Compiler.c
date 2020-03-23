@@ -219,7 +219,7 @@ static void assign()
 		exit(EXIT_FAILURE);
 	}
 
-	int result;
+	int reg;
 	next_token();
 
 	if (token != '=')
@@ -230,8 +230,8 @@ static void assign()
 	}
 
 	next_token();
-	result = expr();
-	CodeGen(STORE, result, 0, EMPTY_FIELD);
+	reg = expr();
+	CodeGen(STORE, reg, 0, token);
 }
 
 //Done
