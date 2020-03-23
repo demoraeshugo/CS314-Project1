@@ -263,7 +263,6 @@ int main()
 		WARNING("No instructions\n");
 		exit(EXIT_FAILURE);
 	}
-	/* YOUR CODE GOES HERE */
 Instruction *first;
 Instruction *second;
 Instruction *third;
