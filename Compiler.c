@@ -220,8 +220,8 @@ static void assign()
 
     if(token == '=') {
         next_token();
-        int reg = expr();
-        CodeGen(STORE, reg, 0, (var-'a')*4);
+        int a = expr();
+        CodeGen(STORE, var, a, EMPTY_FIELD);
     }
 }
 
