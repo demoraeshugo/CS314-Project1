@@ -169,7 +169,7 @@ int loadRegisters(OpCode opcode) {
 	rightReg = expr();
 	reg = next_register();
 
-	CodeGen(opcode, leftReg, rightReg, reg);
+	CodeGen(opcode, reg, leftReg, rightReg);
 
 	return reg;
 }
