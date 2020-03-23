@@ -177,6 +177,7 @@ int loadRegisters(OpCode opcode) {
 //Done
 static int arith_expr()
 {
+	/* YOUR CODE GOES HERE */
 	switch (token)
 	{
 	case '+':
@@ -195,24 +196,12 @@ static int arith_expr()
 static int logical_expr()
 {
 	/* YOUR CODE GOES HERE */
-	int reg, leftReg, rightReg;
-
 	switch (token)
 	{
 	case '&':
-		next_token();
-		leftReg = expr();
-		rightReg = expr();
-		reg = next_register();
-		CodeGen(AND, leftReg, rightReg, reg);
-		return reg;
+		return loadRegisters(AND);
 	case '|':
-		next_token();
-		leftReg = expr();
-		rightReg = expr();
-		reg = next_register();
-		CodeGen(OR, leftReg, rightReg, reg);
-		return reg;
+		return loadRegisters(OR);
 	default:
 		ERROR("Symbol %c unknown\n", token);
 		exit(EXIT_FAILURE);
