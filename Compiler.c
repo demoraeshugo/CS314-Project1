@@ -160,6 +160,20 @@ static int expr()
 	}
 }
 
+int loadRegisters(OpCode opcode) {
+	int reg, leftReg, rightReg;
+
+	next_token();
+
+	leftReg = expr();
+	rightReg = expr();
+	reg = next_register();
+
+	CodeGen(opcode, leftReg, rightReg, reg);
+
+	return reg;
+}
+
 //Done
 static int arith_expr()
 {
@@ -168,12 +182,14 @@ static int arith_expr()
 	switch (token)
 	{
 	case '+':
+	/*
 		next_token();
 		leftReg = expr();
 		rightReg = expr();
 		reg = next_register();
 		CodeGen(ADD, leftReg, rightReg, reg);
-		return reg;
+		*/
+		return loadRegisters(ADD);
 	case '-':
 		next_token();
 		leftReg = expr();
