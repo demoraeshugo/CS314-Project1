@@ -218,12 +218,18 @@ int main()
 		first = instr;
 		second = instr->next;
 		third = second->next;
+		con1 = false;
+	 	con2 = false;
+	 	con3 = false;
+		con4 = false;
+		
 		if (first->opcode == LOADI && second->opcode == LOADI)
 		{
-			con1 = first->field1 == third->field2;
-			con2 = second->field1 == third->field3;
-			con3 = first->field1 == third->field3;
-			con4 = second->field1 == third->field2;
+			if(first->field1 == third->field2) con1 = true;
+			if(second->field1 == third->field3) con2 = true;
+			if(first->field1 == third->field3) con3 = true;
+			if(second->field1 == third->field2) con4 = true;
+
 			switch (third->opcode)
 			{
 			case ADD:
