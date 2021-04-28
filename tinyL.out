@@ -1,16 +1,6 @@
-READ a
-LOADI r2 #1
-LOADI r3 #2
-ADD r1 r2 r3
-STORE  r0
-LOAD r0 
+LOADI r1 #2
+LOADI r2 #2
 LOADI r3 #5
-OR r4 r5 r6
-STORE  r0
-LOAD r0 
-LOADI r2 #8
-LOADI r3 #9
-MUL r8 r9 r10
-AND r7 r10 r11
-STORE  r0
-WRITE e
+ADD r4 r2 r3
+ADD r5 r1 r4
+STORE a r5

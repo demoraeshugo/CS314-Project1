@@ -51,9 +51,9 @@
 #define token *buffer
 
 /* GLOBALS */
-static char *buffer = NULL;	 /* read buffer */
-static int regnum = 1;		 /* for next free virtual register number */
-static FILE *outfile = NULL; /* output of code generation */
+static char *buffer = NULL;	/* read buffer */
+static int regnum = 1;		/* for next free virtual register number */
+static FILE *outfile = NULL;	/* output of code generation */
 
 /* Utilities */
 static void CodeGen(OpCode opcode, int field1, int field2, int field3);
@@ -62,7 +62,7 @@ static inline int next_register();
 static inline int is_digit(char c);
 static inline int to_digit(char c);
 static inline int is_identifier(char c);
-static char *read_input(FILE *f);
+static char *read_input(FILE * f);
 
 /* Routines for recursive descending parser LL(1) */
 static void program();
@@ -73,276 +73,178 @@ static void assign();
 static void read();
 static void print();
 static int expr();
-static int var();
+static int variable();
 static int digit();
-static int arith_expr();
-static int logical_expr();
 
 /*************************************************************************/
 /* Definitions for recursive descending parser LL(1)                     */
-/*
-			Class : 							LL
-			Direction of Scanning : 			Left-to-Right		
-			Derivation Discovered : 			Left-Most
-			Parse Tree Construction : 			Top-Down
-			Algorithim Used : 					Predictive
-																		*/
 /*************************************************************************/
-
-//Done
 static int digit()
 {
-	//DIGIT ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-	int reg;
+    int reg;
 
-	if (!is_digit(token))
-	{
-		ERROR("Expected digit\n");
-		exit(EXIT_FAILURE);
-	}
-	reg = next_register();
-	CodeGen(LOADI, reg, to_digit(token), EMPTY_FIELD);
-	next_token();
-	return reg;
+    if (!is_digit(token)) {
+        ERROR("Expected digit\n");
+        exit(EXIT_FAILURE);
+    }
+    reg = next_register();
+    CodeGen(LOADI, reg, to_digit(token), EMPTY_FIELD);
+    next_token();
+    return reg;
 }
 
-//Done
-static int var()
+static int variable()
 {
-	/* YOUR CODE GOES HERE */
-	//VAR ::= a | b | c | d | e | f
-	int reg;
+    int reg;
 
-	if (!is_identifier(token))
-	{
-		ERROR("Expected identfier\n");
-		exit(EXIT_FAILURE);
-	}
-	reg = next_register();
-	CodeGen(LOAD, reg, token, EMPTY_FIELD);
-	next_token();
-	return reg;
+    if(!is_identifier(token)) {
+        printf("token: %c\n", token);
+        ERROR("Expected identifier\n");
+        exit(EXIT_FAILURE);
+    }
+    reg = next_register();
+    CodeGen(LOAD, reg, token, EMPTY_FIELD);
+    /* YOUR CODE GOES HERE */
+    next_token();
+    return reg;
 }
 
-//Done
+/*returns register #*/
 static int expr()
 {
-	switch (token)
-	{
-	case '+':
-	case '-':
-	case '*':
-		return arith_expr();
-	case '&':
-	case '|':
-		return logical_expr();
-	case 'a':
-	case 'b':
-	case 'c':
-	case 'd':
-	case 'e':
-	case 'f':
-		return var();
-	case '0':
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
-		return digit();
-	default:
-		ERROR("Symbol %c unknown\n", token);
-		exit(EXIT_FAILURE);
-	}
-}
+    int reg, left_reg, right_reg;
 
-int loadRegisters(OpCode opcode) {
-	int reg, leftReg, rightReg;
+    switch (token) {
+        case '+':
+            next_token();
+            left_reg = expr();
+            right_reg = expr();
+            reg = next_register();
+            CodeGen(ADD, reg, left_reg, right_reg);
+            return reg;
 
-	next_token();
+        case '-':
+            next_token();
+            left_reg = expr();
+            right_reg = expr();
+            reg = next_register();
+            CodeGen(SUB, reg, left_reg, right_reg);
+            return reg;
 
-	leftReg = expr();
-	rightReg = expr();
-	reg = next_register();
+        case '*':
+            next_token();
+            left_reg = expr();
+            right_reg = expr();
+            reg = next_register();
+            CodeGen(MUL, reg, left_reg, right_reg);
+            return reg;
 
-	CodeGen(opcode, reg, leftReg, rightReg);
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+            return variable();
 
-	return reg;
-}
-
-//Done
-static int arith_expr()
-{
-	/* YOUR CODE GOES HERE */
-	switch (token)
-	{
-	case '+':
-		return loadRegisters(ADD);
-	case '-':
-		return loadRegisters(SUB);
-	case '*':
-		return loadRegisters(MUL);
-	default:
-		ERROR("Symbol %c unknown\n", token);
-		exit(EXIT_FAILURE);
-	}
-}
-
-//Done
-static int logical_expr()
-{
-	/* YOUR CODE GOES HERE */
-	switch (token)
-	{
-	case '&':
-		return loadRegisters(AND);
-	case '|':
-		return loadRegisters(OR);
-	default:
-		ERROR("Symbol %c unknown\n", token);
-		exit(EXIT_FAILURE);
-	}
-}
-
-//Done
-static void assign()
-{
-	/* YOUR CODE GOES HERE */
-	// ASSIGN ::= VAR = EXPR
-
-	char var = token;
-
-    next_token();
-
-    if(token == '=') {
-        next_token();
-        int a = expr();
-        CodeGen(STORE, var, a, EMPTY_FIELD);
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            return digit();
+        default:
+            ERROR("Symbol %c unknown\n", token);
+            exit(EXIT_FAILURE);
     }
 }
 
-//Done
+/*called by stmt*/
+/*token should be identifier*/
+static void assign()
+{
+    int reg;
+    char id;
+
+    id = token;
+    next_token();
+    if(token != '='){
+        ERROR("Expected '='\n");
+        exit(EXIT_FAILURE);
+    }
+    next_token();
+    reg = expr();
+    CodeGen(STORE, id, reg, EMPTY_FIELD);
+}
+
 static void read()
 {
-	/* YOUR CODE GOES HERE */
-	//READ ::= % VAR
-	if (token != '%')
-	{
-		ERROR("Expected &\n");
-		exit(EXIT_FAILURE);
-	}
-
-	next_token();
-
-	if (!is_identifier(token))
-	{
-		ERROR("Expected identifier\n");
-		exit(EXIT_FAILURE);
-	}
-
-	CodeGen(READ, token, EMPTY_FIELD, EMPTY_FIELD);
-	next_token();
+    next_token();
+    CodeGen(READ, token, EMPTY_FIELD, EMPTY_FIELD);
+    next_token();
 }
 
-//Done
 static void print()
 {
-	/* YOUR CODE GOES HERE */
-	//PRINT ::= $ VAR
-	if (token != '$')
-	{
-		ERROR("Expected $\n");
-		exit(EXIT_FAILURE);
-	}
-
-	next_token();
-
-	if (!is_identifier(token))
-	{
-		ERROR("Expected identifier\n");
-		exit(EXIT_FAILURE);
-	}
-
-	CodeGen(WRITE, token, EMPTY_FIELD, EMPTY_FIELD);
-	next_token();
+    next_token();
+    if(!is_identifier(token)){
+        ERROR("Expected identifier\n");
+        exit(EXIT_FAILURE);
+    }
+    CodeGen(WRITE, token, EMPTY_FIELD, EMPTY_FIELD);
+    next_token();
 }
 
-//Done
 static void stmt()
 {
-	/* YOUR CODE GOES HERE */
-	//STMT ::= ASSIGN | READ | PRINT
-	switch (token)
-	{
-	case 'a':
-	case 'b':
-	case 'c':
-	case 'd':
-	case 'e':
-	case 'f':
-		assign();
-		return;
-	case '%':
-		read();
-		return;
-	case '$':
-		print();
-		return;
-	default:
-		ERROR("Symbol %c unknown\n", token);
-		exit(EXIT_FAILURE);
-	}
+    switch(token){
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+            assign();
+            return;
+
+        case '?':
+            read();
+            return;
+
+        case '!':
+            print();
+            return;
+
+        default:
+            ERROR("Symbol %c unknown\n", token);
+            exit(EXIT_FAILURE);
+    }
 }
 
-//Done
 static void morestmts()
 {
-	/* YOUR CODE GOES HERE */
-	//MORESTMTS ::= ; STMTLIST | epsilon
-	if (token == '!')
-	{
-		return;
-	}
-	else
-	{
-		if (token != ';')
-		{
-			ERROR("Program error.  Current input symbol is %c\n", token);
-			ERROR("Expected ;\n");
-			exit(EXIT_FAILURE);
-		}
-		else
-		{
-			next_token();
-			stmtlist();
-		}
-	}
+    if(token == ';'){
+        next_token();
+        stmtlist();
+    }
 }
 
-//Done
 static void stmtlist()
 {
-	/* YOUR CODE GOES HERE */
-	//STMTLIST ::= STMT MORESTMTS
-	stmt();
-	morestmts();
+    stmt();
+    morestmts();
 }
 
-//Done
 static void program()
 {
-	/* YOUR CODE GOES HERE */
-	//PROGRAM ::= STMTLIST !
-	stmtlist();
-	if (token != '!')
-	{
-		ERROR("Program error: Current input symbol is %c \n", token);
-		exit(EXIT_FAILURE);
-	}
+    stmtlist();
+    if (token != '.') {
+        ERROR("Program error.  Current input symbol is %c\n", token);
+        exit(EXIT_FAILURE);
+    };
 }
 
 /*************************************************************************/
@@ -350,97 +252,98 @@ static void program()
 /*************************************************************************/
 static void CodeGen(OpCode opcode, int field1, int field2, int field3)
 {
-	Instruction instr;
+    Instruction instr;
 
-	if (!outfile)
-	{
-		ERROR("File error\n");
-		exit(EXIT_FAILURE);
-	}
-	instr.opcode = opcode;
-	instr.field1 = field1;
-	instr.field2 = field2;
-	instr.field3 = field3;
-	PrintInstruction(outfile, &instr);
+    if (!outfile) {
+        ERROR("File error\n");
+        exit(EXIT_FAILURE);
+    }
+    instr.opcode = opcode;
+    instr.field1 = field1;
+    instr.field2 = field2;
+    instr.field3 = field3;
+    PrintInstruction(outfile, &instr);
 }
 
 static inline void next_token()
 {
-	if (*buffer == '\0')
-	{
-		ERROR("End of program input\n");
-		exit(EXIT_FAILURE);
-	}
-	printf("%c ", *buffer);
-	if (*buffer == ';')
-		printf("\n");
-	buffer++;
-	if (*buffer == '\0')
-	{
-		ERROR("End of program input\n");
-		exit(EXIT_FAILURE);
-	}
-	if (*buffer == '!')
-		printf("!\n");
+    printf("%c ", *buffer);
+    if (*buffer == ';')
+        printf("\n");
+    buffer++;
+    if (*buffer == '.')
+        printf(".\n");
 }
 
 static inline int next_register()
 {
-	return regnum++;
+    return regnum++;
 }
 
 static inline int is_digit(char c)
 {
-	if (c >= '0' && c <= '9')
-		return 1;
-	return 0;
+    if (c >= '0' && c <= '9')
+        return 1;
+    return 0;
 }
 
 static inline int to_digit(char c)
 {
-	if (is_digit(c))
-		return c - '0';
-	WARNING("Non-digit passed to %s, returning zero\n", __func__);
-	return 0;
+    if (is_digit(c))
+        return c - '0';
+    WARNING("Non-digit passed to %s, returning zero\n", __func__);
+    return 0;
 }
 
 static inline int is_identifier(char c)
 {
-	if (c >= 'a' && c <= 'f')
-		return 1;
-	return 0;
+    if (c >= 'a' && c <= 'e')
+        return 1;
+    return 0;
 }
 
-static char *read_input(FILE *f)
+static char * read_input(FILE * f)
 {
-	size_t size, i;
-	char *b;
-	int c;
+    int max, i, c;
+    char *b;
 
-	for (b = NULL, size = 0, i = 0;;)
-	{
-		if (i >= size)
-		{
-			size = (size == 0) ? MAX_BUFFER_SIZE : size * 2;
-			b = (char *)realloc(b, size * sizeof(char));
-			if (!b)
-			{
-				ERROR("Realloc failed\n");
-				exit(EXIT_FAILURE);
-			}
-		}
-		c = fgetc(f);
-		if (EOF == c)
-		{
-			b[i] = '\0';
-			break;
-		}
-		if (isspace(c))
-			continue;
-		b[i] = c;
-		i++;
-	}
-	return b;
+    max = MAX_BUFFER_SIZE;
+    b = (char *)calloc(max, sizeof(char));
+    if (!b) {
+        ERROR("Calloc failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /* skip leading whitespace */
+    for (;;) {
+        c = fgetc(f);
+        if (EOF == c) {
+            break;
+        } else if (!isspace(c)) {
+            ungetc(c, f);
+            break;
+        }
+    }
+
+    i = 0;
+    for (;;) {
+        c = fgetc(f);
+        if (EOF == c) {
+            b[i] = '\0';
+            break;
+        }
+        b[i] = c;
+        if (max - 1 == i) {
+            max = max + max;
+            b = (char *)realloc(buffer, max * sizeof(char));
+            if (!b) {
+                ERROR("Realloc failed\n");
+                exit(EXIT_FAILURE);
+            }
+        }
+        ++i;
+    }
+    return b;
 }
 
 /*************************************************************************/
