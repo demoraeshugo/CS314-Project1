@@ -1,6 +1,0 @@
-LOADI r1 #2
-LOADI r2 #2
-LOADI r3 #5
-ADD r4 r2 r3
-ADD r5 r1 r4
-STORE a r5

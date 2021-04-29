@@ -1,12 +1,3 @@
-/*
- *********************************************
- *  314 Principles of Programming Languages  *
- *  Spring 2014                              *
- *  Authors: Ulrich Kremer                   *
- *           Hans Christian Woithe           *
- *********************************************
- */
-
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,61 +6,93 @@
 
 int main()
 {
-    Instruction *head;
-    Instruction *curr, *prev, *next;
+	Instruction *head;
 
-    head = ReadInstructionList(stdin);
-    if (!head) {
-        ERROR("No instructions\n");
-        exit(EXIT_FAILURE);
-    }
+	head = ReadInstructionList(stdin);
+	if (!head) {
+		WARNING("No instructions\n");
+		exit(EXIT_FAILURE);
+	}
 
-    curr = head;
-    prev = head->prev;
-    next = head->next;
+    Instruction *current;
+    Instruction *previous;
+    Instruction *next;
 
-    while(curr && next){
-        if(prev && prev->opcode == LOADI &&
-                curr && curr->opcode == LOADI){
-            switch(next->opcode){
-                /*add*/
-                case ADD:
-                    curr->field1 = next->field1;
-                    curr->field2 = prev->field2 + curr->field2;
+    current = head;
+    previous = current->next;
+    next = previous->next;
 
-                    /*sub*/
-                case SUB:
-                    curr->field1 = next->field1;
-                    if(next->field2 > next->field3){
-                        curr->field2 = curr->field2 - prev->field2;
-                    }
-                    else{
-                        curr->field2 = curr->field2 - prev->field2; 
-                    }
+    int first, second, result, check;
+    check = 0;
 
-                    /*mul*/
-                case MUL:
-                    curr->field1 = next->field1;
-                    curr->field2 = curr->field2 * prev->field2;
+    while (next != NULL) {
+        //Check the opcodes
+        if ( current->opcode == LOADI && previous->opcode == LOADI &&
+                (next->opcode == ADD 
+                ||  next->opcode == SUB 
+                || next->opcode == MUL
+                || next->opcode == AND
+                || next->opcode == OR) ){
+            check = 1;
 
-                    curr->next = next->next;
-                    curr->next->prev = curr;
-                    curr->prev = prev->prev;
-                    curr->prev->next = curr;
-                    free(prev);
-                    free(next);
+            first = current->field2;
+            second = previous->field2;
 
-                default:
-                    break;
+            current->field1 = next->field1;
+
+            if (next->opcode == ADD) {
+                result = first+second;
+                current->field2 = result;
+            }
+            else if (next->opcode == SUB) {
+                result = first-second;
+                current->field2 = result;
+            }
+            else if (next->opcode == MUL) {
+                result = first*second;
+                current->field2 = result;
+            }
+            else if (next->opcode == AND) {
+                result = first&second;
+                current->field2 = result;
+            }
+            else if (next->opcode == OR) {
+                result = first|second;
+                current->field2 = result;
+            } else {
+                ERROR("Unexpected instruction\n");
+                exit(EXIT_FAILURE);
             }
         }
-        curr = curr->next;
-        prev = curr->prev;
-        next = curr->next;
 
+        //Check if there can be optimizations
+        if (check == 0) {
+            current = current->next;
+            previous = previous->next;
+            next = next->next;
+        } else {
+            Instruction *temp1;
+            Instruction *temp2;
 
+            temp1 = previous;
+            temp2 = next;
+
+            free(temp1);
+            free(temp2);
+
+            current->next = next->next;
+            current = current->next;
+            previous = current->next;
+            next = previous->next;
+
+            check = 0;
+        }
     }
-    PrintInstructionList(stdout, head);
-    DestroyInstructionList(head);
-    return EXIT_SUCCESS;
+
+	if (head) {
+		PrintInstructionList(stdout, head);
+		DestroyInstructionList(head);
+	}
+
+	return EXIT_SUCCESS;
 }

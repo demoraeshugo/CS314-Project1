@@ -1,0 +1,20 @@
+READ a
+LOADI r1 #5
+LOADI r4 #-5
+AND r5 r1 r4
+STORE c r5
+LOADI r6 #1
+LOADI r7 #2
+LOAD r8 a
+ADD r9 r7 r8
+ADD r10 r6 r9
+LOADI r11 #5
+OR r12 r10 r11
+LOADI r13 #8
+SUB r14 r12 r13
+STORE b r14
+WRITE b
+LOAD r15 b
+LOAD r16 a
+ADD r17 r15 r16
+STORE a r17

@@ -1,44 +1,3 @@
-/* -------------------------------------------------
-
-            CFG for tinyL LANGUAGE
-
-     PROGRAM ::= STMTLIST !
-     STMTLIST ::= STMT MORESTMTS
-     MORESTMTS ::= ; STMTLIST | epsilon
-     STMT ::= ASSIGN | READ | PRINT
-     ASSIGN ::= VAR = EXPR
-     READ ::= % VAR
-     PRINT ::= $ VAR
-     EXPR ::= ARITH_EXPR | 
-     	      LOGICAL_EXPR|
-     	      VAR | 
-              DIGIT
-     ARITH_EXPR ::= + EXPR EXPR |
-              		- EXPR EXPR |
-              		* EXPR EXPR 
-     LOGICAL_EXPR ::= | EXPR EXPR |
-     				  & EXPR EXPR
-              
-     VAR ::= a | b | c | d | e | f 
-     DIGIT ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-
-     NOTE: tokens are exactly a single character long
-
-     Example expressions:
-
-           +12!
-           +1b!
-           +*34&78!
-           -*+1+2a58!
-
-     Example programs;
-
-         %a;%b;c=&3*ab;d=+c1;$d!
-         %a;b=|*+1+2a58;$b!
-
- ---------------------------------------------------
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -104,7 +63,6 @@ static int variable()
     }
     reg = next_register();
     CodeGen(LOAD, reg, token, EMPTY_FIELD);
-    /* YOUR CODE GOES HERE */
     next_token();
     return reg;
 }
@@ -139,11 +97,28 @@ static int expr()
             CodeGen(MUL, reg, left_reg, right_reg);
             return reg;
 
+        case '&':    
+            next_token();
+            left_reg = expr();
+            right_reg = expr();
+            reg = next_register();
+            CodeGen(AND, reg, left_reg, right_reg);
+            return reg;
+            
+        case '|':
+            next_token();
+            left_reg = expr();
+            right_reg = expr();
+            reg = next_register();
+            CodeGen(OR, reg, left_reg, right_reg);
+            return reg;
+
         case 'a':
         case 'b':
         case 'c':
         case 'd':
         case 'e':
+        case 'f':
             return variable();
 
         case '0':
@@ -157,6 +132,7 @@ static int expr()
         case '8':
         case '9':
             return digit();
+
         default:
             ERROR("Symbol %c unknown\n", token);
             exit(EXIT_FAILURE);
@@ -207,14 +183,15 @@ static void stmt()
         case 'c':
         case 'd':
         case 'e':
+        case 'f':
             assign();
             return;
 
-        case '?':
+        case '%':
             read();
             return;
 
-        case '!':
+        case '$':
             print();
             return;
 
@@ -241,7 +218,7 @@ static void stmtlist()
 static void program()
 {
     stmtlist();
-    if (token != '.') {
+    if (token != '!') {
         ERROR("Program error.  Current input symbol is %c\n", token);
         exit(EXIT_FAILURE);
     };
@@ -271,8 +248,8 @@ static inline void next_token()
     if (*buffer == ';')
         printf("\n");
     buffer++;
-    if (*buffer == '.')
-        printf(".\n");
+    if (*buffer == '!')
+        printf("!\n");
 }
 
 static inline int next_register()
@@ -297,7 +274,7 @@ static inline int to_digit(char c)
 
 static inline int is_identifier(char c)
 {
-    if (c >= 'a' && c <= 'e')
+    if (c >= 'a' && c <= 'f')
         return 1;
     return 0;
 }
