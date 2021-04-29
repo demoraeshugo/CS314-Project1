@@ -6,10 +6,10 @@ In this project, I was asked to write a recursive descent LL(1) parser and code 
 ### Binaries
 The included ```Make``` file can be used to compile all the needed binaries individually via: ```compile | optimize | run``` or simultaneously via ```all```
 
-### Testing
-In ``/tests`` you will find a series of sampleN.tinyL files containing well formated sample inputs for the ```compile``` command. An individual test can be ran with ```./compile tests/sampleN.tinyL```. This will result in a new file: ```tinyL.out```. You can then call the optimizer on this file with ```./optimize < tinyL.out > opt.out```. Finally you can run the optimized instructions with ```./run opt.out```
+### Individual Test Cases
+In ``/tests`` you will find a series of sampleN.tinyL files containing well formated sample inputs for the ```compile``` command. An individual test can be ran with ```./compile tests/sampleN.tinyL```. This will result in a new file: ```tinyL.out```. Next call the optimizer on this file with ```./optimize < tinyL.out > opt.out```. Finally run the optimized instructions with ```./run opt.out```
 
-### Python
+### Automated Test Cases
 I've included a simple Python script ```script.py``` that will generate all the binaries and run the program on all the test cases. Simply run ```python script.py```
 
 ## Background
