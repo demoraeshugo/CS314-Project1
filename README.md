@@ -7,7 +7,9 @@ In this project, I was asked to write a recursive descent LL(1) parser and code 
 tinyL is a simple expression language that allows assignments and basic I/O operations.
 
 Two examples of valid tinyL programs:
+
 %a;%b;c=&3*ab;d=+c1;$d!
+
 %a;b=-*+1+2a58;$b!
 
 ### Target Architecture
