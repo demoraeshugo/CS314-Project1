@@ -6,6 +6,8 @@ In this project, I was asked to write a recursive descent LL(1) parser and code 
 ### The TinyL Language
 tinyL is a simple expression language that allows assignments and basic I/O operations.
 
+![Grammer](https://github.com/demoraeshugo/Tiny-Language-Compiler/blob/master/resources/grammer.png)
+
 Two examples of valid tinyL programs:
 
 %a;%b;c=&3*ab;d=+c1;$d!
@@ -18,3 +20,6 @@ than memory operands (memory addresses). This means that for each access to a me
 location, a load or store instruction has to be generated. Here is the machine instruction
 set of our RISC target architecture. Rx , Ry , and Rz represent three arbitrary, but distinct
 registers.
+
+![Architecture](https://github.com/demoraeshugo/Tiny-Language-Compiler/blob/master/resources/architecture.png)
+
